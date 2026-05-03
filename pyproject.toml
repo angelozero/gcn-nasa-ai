@@ -1,0 +1,24 @@
+[project]
+name = "gcn-nasa-ai"
+version = "0.1.0"
+description = "Consumidor de alertas GCN NASA com integração de IA"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "gcn-kafka>=0.3.4",
+    "pydantic>=2.13.3",
+    "pydantic-settings>=2.14.0",
+    "python-dotenv>=1.2.2",
+]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+# Esta é a parte crucial para resolver o erro de "ModuleNotFoundError"
+[tool.hatch.build.targets.wheel]
+packages = ["src/gcn_nasa_ai"]
+
+[tool.uv]
+# Garante que o ambiente virtual considere a pasta src
+dev-dependencies = []
