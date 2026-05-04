@@ -7,8 +7,6 @@ from gcn_kafka import Consumer
 from app.config.gcn_nasa_settings import GCNNasaSettings
 from app.models import TOPIC_MODEL_MAP
 
-MAX_SCANS = 5
-
 logging.basicConfig(
     level=logging.INFO,
     format="%(asctime)s [%(levelname)s] %(message)s",
@@ -18,6 +16,7 @@ logger = logging.getLogger(__name__)
 
 def main() -> None:
     settings = GCNNasaSettings()
+    duracao = settings.CONSUMER_DURATION
 
     consumer = Consumer(
         client_id=settings.GCN_NASA_CLIENT_ID,
@@ -25,12 +24,11 @@ def main() -> None:
     )
     consumer.subscribe(settings.GCN_NASA_ALERTS)
 
-    logger.info("Consumidor GCN iniciado. Executando %d varreduras...", MAX_SCANS)
+    logger.info("Consumidor GCN iniciado. Executando por %d segundo(s)...", duracao)
 
+    inicio = time.monotonic()
     try:
-        for scan in range(1, MAX_SCANS + 1):
-            logger.info("Varredura %d/%d", scan, MAX_SCANS)
-
+        while (time.monotonic() - inicio) < duracao:
             for message in consumer.consume(timeout=1):
                 if message.error():
                     logger.error("Erro no Kafka: %s", message.error())
@@ -59,14 +57,12 @@ def main() -> None:
                     )
                 except Exception:
                     logger.exception("Erro de validação na mensagem do tópico %s", topic)
-
-            if scan < MAX_SCANS:
-                time.sleep(2)
     finally:
         consumer.close()
-        logger.info("Consumidor encerrado com sucesso.")
-
-    logger.info("Todas as %d varreduras concluídas.", MAX_SCANS)
+        logger.info(
+            "Consumidor encerrado após %.1f segundo(s).",
+            time.monotonic() - inicio,
+        )
 
 
 if __name__ == "__main__":

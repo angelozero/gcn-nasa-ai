@@ -9,6 +9,8 @@ class GCNNasaSettings(BaseSettings):
     GCN_NASA_CLIENT_ID: str
     GCN_NASA_CLIENT_SECRET: SecretStr
     GCN_NASA_ALERTS: list[str]
+    # Tempo total (em segundos) que o consumidor ficará ativo escutando mensagens
+    CONSUMER_DURATION: int = 30
 
     # ── LiteLLM Proxy ────────────────────────────────────────
     LITELLM_BASE_URL: str = "http://localhost:4000/v1"
