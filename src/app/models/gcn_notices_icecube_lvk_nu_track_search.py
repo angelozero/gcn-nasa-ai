@@ -2,11 +2,11 @@ from datetime import datetime
 
 from pydantic import BaseModel, Field
 
-from gcn_nasa_ai.models.base import GCNBase
+from app.models.base import GCNBase
 
 
 class GCNLocalizationBase(BaseModel):
-    """Mapeia o core/Localization.schema.json"""
+    """Mapeia o esquema core/Localization.schema.json."""
 
     ra: float = Field(ge=0, le=360)
     dec: float = Field(ge=-90, le=90)
@@ -39,7 +39,7 @@ class FluxSensitivityRange(BaseModel):
 
 class IceCubeLVKNuTrackSearch(GCNBase):
     """
-    Representa a busca de neutrinos do IceCube correlacionada a eventos LVK.
+    Representa a busca de trilhas de neutrinos do IceCube correlacionada a eventos LVK.
     """
 
     type: str = Field("IceCube LVK Alert Nu Track Search", frozen=True)

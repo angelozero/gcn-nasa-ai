@@ -3,11 +3,11 @@ from typing import Literal
 
 from pydantic import BaseModel, ConfigDict, Field
 
-from gcn_nasa_ai.models.base import GCNBase
+from app.models.base import GCNBase
 
 
 class GCNAlertCore(BaseModel):
-    """Mapeia o core/Alert.schema.json"""
+    """Mapeia o esquema core/Alert.schema.json."""
 
     mission: str
     instrument: str | None = None
@@ -18,7 +18,7 @@ class GCNAlertCore(BaseModel):
 
 
 class GCNLocalization(BaseModel):
-    """Mapeia o core/Localization.schema.json"""
+    """Mapeia o esquema core/Localization.schema.json."""
 
     ra: float = Field(ge=0, le=360)
     dec: float = Field(ge=-90, le=90)
@@ -27,7 +27,7 @@ class GCNLocalization(BaseModel):
 
 class DSA110FRBNotice(GCNBase, GCNAlertCore, GCNLocalization):
     """
-    Classe final para DSA-110, herdando a estrutura unificada da NASA
+    Modelo final para o DSA-110, herdando a estrutura unificada de alertas NASA
     e adicionando campos específicos da missão.
     """
 
@@ -38,5 +38,5 @@ class DSA110FRBNotice(GCNBase, GCNAlertCore, GCNLocalization):
     record_number: int | None = None
 
     # Campos customizados do exemplo fornecido
-    example_field_1: str | None = Field(None, description="Custom mission text")
-    example_field_2: int | None = Field(None, description="Custom mission number")
+    example_field_1: str | None = Field(None, description="Texto customizado da missão")
+    example_field_2: int | None = Field(None, description="Número customizado da missão")

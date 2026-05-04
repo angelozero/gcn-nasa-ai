@@ -22,7 +22,7 @@ class GCNCircular(BaseModel):
     def transform_milliseconds_to_datetime(cls, v: int | float | str) -> datetime | str:
         """
         Converte timestamps em milissegundos (comuns em APIs de Astronomia)
-        para objetos datetime timezone-aware do Python.
+        para objetos datetime com fuso horário do Python.
         """
         if isinstance(v, (int, float)):
             return datetime.fromtimestamp(v / 1000.0, tz=timezone.utc)

@@ -1,0 +1,32 @@
+model_list:
+  # ── CIandT Flow (Alberteins) ──────────────────────────────
+  # Modelo para classificação e análise de alertas
+  - model_name: nasa-classifier
+    litellm_params:
+      model: os.environ/LITELLM_MODEL_CLASSIFIER
+      api_key: os.environ/OPENAI_API_KEY
+      api_base: os.environ/LITELLM_API_BASE
+
+  # Modelo para embeddings / RAG
+  - model_name: nasa-embedder
+    litellm_params:
+      model: os.environ/LITELLM_MODEL_EMBEDDER
+      api_key: os.environ/OPENAI_API_KEY
+      api_base: os.environ/LITELLM_API_BASE
+
+  # Modelo rápido para triagem / fallback
+  - model_name: nasa-fast
+    litellm_params:
+      model: os.environ/LITELLM_MODEL_FAST
+      api_key: os.environ/OPENAI_API_KEY
+      api_base: os.environ/LITELLM_API_BASE
+
+general_settings:
+  master_key: os.environ/LITELLM_MASTER_KEY
+  database_url: os.environ/DATABASE_URL
+
+litellm_settings:
+  drop_params: true
+  set_verbose: false
+  num_retries: 2
+  request_timeout: 120

@@ -1,13 +1,13 @@
 from pydantic import BaseModel
 
-from gcn_nasa_ai.models.base import GCNBase
-from gcn_nasa_ai.models.gcn_circulars import GCNCircular
-from gcn_nasa_ai.models.gcn_heartbeat import GCNHeartbeat
-from gcn_nasa_ai.models.gcn_notices_chime_frb import CHIMEFRBNotice
-from gcn_nasa_ai.models.gcn_notices_dsa110_frb import DSA110FRBNotice
-from gcn_nasa_ai.models.gcn_notices_einstein_probe_wxt_alert import EinsteinProbeWXTAlert
-from gcn_nasa_ai.models.gcn_notices_icecube_lvk_nu_track_search import IceCubeLVKNuTrackSearch
-from gcn_nasa_ai.models.igwn_gwalert import GWAlert
+from app.models.base import GCNBase
+from app.models.gcn_circulars import GCNCircular
+from app.models.gcn_heartbeat import GCNHeartbeat
+from app.models.gcn_notices_chime_frb import CHIMEFRBNotice
+from app.models.gcn_notices_dsa110_frb import DSA110FRBNotice
+from app.models.gcn_notices_einstein_probe_wxt_alert import EinsteinProbeWXTAlert
+from app.models.gcn_notices_icecube_lvk_nu_track_search import IceCubeLVKNuTrackSearch
+from app.models.igwn_gwalert import GWAlert
 
 __all__ = [
     "GCNBase",

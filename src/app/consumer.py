@@ -4,8 +4,8 @@ import time
 
 from gcn_kafka import Consumer
 
-from gcn_nasa_ai.config.gcn_nasa_settings import GCNNasaSettings
-from gcn_nasa_ai.models import TOPIC_MODEL_MAP
+from app.config.gcn_nasa_settings import GCNNasaSettings
+from app.models import TOPIC_MODEL_MAP
 
 MAX_SCANS = 5
 
@@ -58,13 +58,13 @@ def main() -> None:
                         parsed.model_dump_json()[:200],
                     )
                 except Exception:
-                    logger.exception("Erro na validação da mensagem do tópico %s", topic)
+                    logger.exception("Erro de validação na mensagem do tópico %s", topic)
 
             if scan < MAX_SCANS:
-                time.sleep(1)
+                time.sleep(2)
     finally:
         consumer.close()
-        logger.info("Consumer encerrado gracefully.")
+        logger.info("Consumidor encerrado com sucesso.")
 
     logger.info("Todas as %d varreduras concluídas.", MAX_SCANS)
 

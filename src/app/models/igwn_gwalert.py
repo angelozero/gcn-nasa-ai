@@ -2,7 +2,7 @@ from pydantic import BaseModel, HttpUrl
 
 
 class Classification(BaseModel):
-    """Classificação probabilística do evento gravitacional."""
+    """Classificação probabilística do evento de onda gravitacional."""
 
     BBH: float
     BNS: float
@@ -19,7 +19,7 @@ class Properties(BaseModel):
 
 
 class Event(BaseModel):
-    """Dados do evento gravitacional detectado."""
+    """Dados do evento de onda gravitacional detectado."""
 
     central_frequency: float | None = None
     classification: Classification
@@ -35,7 +35,7 @@ class Event(BaseModel):
 
 
 class GWAlert(BaseModel):
-    """Representa um alerta de onda gravitacional do IGWN."""
+    """Representa um alerta de onda gravitacional da rede IGWN."""
 
     alert_type: str
     event: Event

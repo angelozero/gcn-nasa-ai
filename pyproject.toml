@@ -6,6 +6,7 @@ readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
     "gcn-kafka>=0.3.4",
+    "openai>=1.30.0",
     "pydantic>=2.13.3",
     "pydantic-settings>=2.14.0",
     "python-dotenv>=1.2.2",
@@ -17,7 +18,7 @@ build-backend = "hatchling.build"
 
 # Esta é a parte crucial para resolver o erro de "ModuleNotFoundError"
 [tool.hatch.build.targets.wheel]
-packages = ["src/gcn_nasa_ai"]
+packages = ["src/app"]
 
 [tool.uv]
 # Garante que o ambiente virtual considere a pasta src
