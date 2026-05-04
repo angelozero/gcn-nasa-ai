@@ -3,9 +3,10 @@ import logging
 import time
 
 from gcn_kafka import Consumer
-
 from app.config.gcn_nasa_settings import GCNNasaSettings
+from app.llm.client import LLMClient
 from app.models import TOPIC_MODEL_MAP
+from app.pipeline.graph import create_pipeline
 
 logging.basicConfig(
     level=logging.INFO,
@@ -16,7 +17,9 @@ logger = logging.getLogger(__name__)
 
 def main() -> None:
     settings = GCNNasaSettings()
-    duracao = settings.CONSUMER_DURATION
+    llm_client = LLMClient(settings)
+
+    pipeline = create_pipeline(llm_client=llm_client, settings=settings)
 
     consumer = Consumer(
         client_id=settings.GCN_NASA_CLIENT_ID,
@@ -24,11 +27,16 @@ def main() -> None:
     )
     consumer.subscribe(settings.GCN_NASA_ALERTS)
 
+    duracao = settings.CONSUMER_DURATION
     logger.info("Consumidor GCN iniciado. Executando por %d segundo(s)...", duracao)
+
+    dict_test = {}
+    keep = True
 
     inicio = time.monotonic()
     try:
-        while (time.monotonic() - inicio) < duracao:
+        # while (time.monotonic() - inicio) < duracao:
+        while keep:
             for message in consumer.consume(timeout=1):
                 if message.error():
                     logger.error("Erro no Kafka: %s", message.error())
@@ -50,19 +58,46 @@ def main() -> None:
 
                 try:
                     parsed = model_class(**value)
+
                     logger.info(
                         "[%s] Mensagem parseada: %s",
                         topic,
                         parsed.model_dump_json()[:200],
                     )
+
+                    # if topic != "gcn.heartbeat":
+                    # result = pipeline.invoke(
+                    #     {
+                    #         "raw_alert": value,  # dict original, completo
+                    #         "topic": topic,
+                    #     }
+                    # )
+
+                    # logger.info(
+                    #     "[FINAL] Sumário gerado: %s", result.get("summary", "N/A")
+                    # )
+
+                    dict_test = model_class
+                    keep = False
+
                 except Exception:
-                    logger.exception("Erro de validação na mensagem do tópico %s", topic)
+                    logger.exception(
+                        "Erro de validação na mensagem do tópico %s", topic
+                    )
     finally:
         consumer.close()
         logger.info(
             "Consumidor encerrado após %.1f segundo(s).",
             time.monotonic() - inicio,
         )
+    print("\nLANGGRAPH")
+    result = pipeline.invoke(
+        {
+            "raw_alert": value,  # dict original, completo
+            "topic": dict_test,
+        }
+    )
+    logger.info("\n[FINAL] Sumário gerado: %s", result.get("summary", "N/A"))
 
 
 if __name__ == "__main__":

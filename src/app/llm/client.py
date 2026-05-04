@@ -1,11 +1,7 @@
 """Wrapper do cliente LLM que roteia requisições pelo proxy LiteLLM."""
 
-from __future__ import annotations
-
 import logging
-
 from openai import OpenAI
-
 from app.config.gcn_nasa_settings import GCNNasaSettings
 
 logger = logging.getLogger(__name__)

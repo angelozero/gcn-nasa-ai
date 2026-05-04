@@ -20,7 +20,8 @@ class GCNNasaSettings(BaseSettings):
     LLM_MODEL_FAST: str = "nasa-fast"
 
     model_config = SettingsConfigDict(
-        env_file=".env",
+        # Tenta carregar do diretório atual, ou um nível acima
+        env_file=[".env", "../.env"], 
         env_file_encoding="utf-8",
-        extra="ignore",  # Ignora variáveis extras no .env não declaradas nesta classe
+        extra="ignore",
     )
