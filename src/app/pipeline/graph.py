@@ -8,6 +8,7 @@ from app.pipeline.nodes.persist import persist_node
 
 logger = logging.getLogger(__name__)
 
+
 def route_after_classify(state: AlertState) -> str:
     alert_type = state.get("alert_type", "UNKNOWN")
     if alert_type in ("UNKNOWN", "HEARTBEAT"):
@@ -16,11 +17,19 @@ def route_after_classify(state: AlertState) -> str:
     return "enrich"
 
 
-def create_pipeline(llm_client, settings):
+def create_pipeline(llm_client):
+    """Monta e compila o pipeline LangGraph.
+
+    Os modelos LLM são constantes definidas em LLMModels — cada nó
+    os importa diretamente, sem necessidade de injeção via parâmetro.
+
+    Args:
+        llm_client: cliente LLM para chamadas ao proxy LiteLLM.
+    """
     graph = StateGraph(AlertState)
-    graph.add_node("classify", make_classify_node(llm_client, settings))
-    graph.add_node("enrich", make_enrich_node(llm_client, settings))
-    graph.add_node("summarize", make_summarize_node(llm_client, settings))
+    graph.add_node("classify", make_classify_node(llm_client))
+    graph.add_node("enrich", make_enrich_node(llm_client))
+    graph.add_node("summarize", make_summarize_node(llm_client))
     graph.add_node("persist", persist_node)
 
     graph.set_entry_point("classify")

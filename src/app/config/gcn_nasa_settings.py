@@ -3,7 +3,12 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
 class GCNNasaSettings(BaseSettings):
-    """Configurações centralizadas do GCN NASA carregadas do arquivo .env."""
+    """Configurações do consumidor GCN NASA carregadas do arquivo .env.
+
+    Responsabilidade única: credenciais e parâmetros do Kafka GCN.
+    Configurações do LLM ficam em LLMSettings (llm/settings.py).
+    Aliases de modelos ficam em LLMModels (config/llm_models.py).
+    """
 
     # ── GCN Kafka ────────────────────────────────────────────
     GCN_NASA_CLIENT_ID: str
@@ -12,16 +17,9 @@ class GCNNasaSettings(BaseSettings):
     # Tempo total (em segundos) que o consumidor ficará ativo escutando mensagens
     CONSUMER_DURATION: int = 30
 
-    # ── LiteLLM Proxy ────────────────────────────────────────
-    LITELLM_BASE_URL: str = "http://localhost:4000/v1"
-    LITELLM_API_KEY: SecretStr  # Lido de LITELLM_API_KEY no .env (mesmo valor que LITELLM_MASTER_KEY no docker/.env)
-    LLM_MODEL_CLASSIFIER: str = "nasa-classifier"
-    LLM_MODEL_EMBEDDER: str = "nasa-embedder"
-    LLM_MODEL_FAST: str = "nasa-fast"
-
     model_config = SettingsConfigDict(
         # Tenta carregar do diretório atual, ou um nível acima
-        env_file=[".env", "../.env"], 
+        env_file=[".env", "../.env"],
         env_file_encoding="utf-8",
         extra="ignore",
     )

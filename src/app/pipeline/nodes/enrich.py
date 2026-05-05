@@ -1,13 +1,18 @@
 import json
 import logging
 from app.llm.client import LLMClient
-from app.config.gcn_nasa_settings import GCNNasaSettings
+from app.config.llm_models import LLMModels
 from app.pipeline.state import AlertState
 
 logger = logging.getLogger(__name__)
 
 
-def make_enrich_node(llm_client: LLMClient, settings: GCNNasaSettings):
+def make_enrich_node(llm_client: LLMClient):
+    """Fábrica do nó de enriquecimento.
+
+    Usa ``LLMModels.FAST`` como modelo — constante definida em
+    ``config/llm_models.py``, sem necessidade de injeção de dependência.
+    """
 
     def enrich_node(state: AlertState) -> dict:
         try:
@@ -26,7 +31,7 @@ def make_enrich_node(llm_client: LLMClient, settings: GCNNasaSettings):
                         """
 
             result = llm_client.chat(
-                settings.LLM_MODEL_FAST,
+                LLMModels.FAST,
                 [
                     {
                         "role": "system",
@@ -42,6 +47,7 @@ def make_enrich_node(llm_client: LLMClient, settings: GCNNasaSettings):
             return {"analysis": result}
         
         except Exception as ex:
-            logger.error("Falha ao executar enrich_node: ", ex)
+            logger.error("Falha ao executar enrich_node: ", ex.message)
+            raise RuntimeError("Falha ao executar enrich_node: %s" % (ex.message))
 
     return enrich_node

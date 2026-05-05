@@ -2,12 +2,18 @@ import re
 import json
 import logging
 from app.llm.client import LLMClient
-from app.config.gcn_nasa_settings import GCNNasaSettings
+from app.config.llm_models import LLMModels
 from app.pipeline.state import AlertState
 
 logger = logging.getLogger(__name__)
 
-def make_classify_node(llm_client: LLMClient, settings: GCNNasaSettings):
+
+def make_classify_node(llm_client: LLMClient):
+    """Fábrica do nó de classificação.
+
+    Usa ``LLMModels.CLASSIFIER`` como modelo — constante definida em
+    ``config/llm_models.py``, sem necessidade de injeção de dependência.
+    """
 
     def classify_node(state: AlertState) -> dict:
 
@@ -15,7 +21,7 @@ def make_classify_node(llm_client: LLMClient, settings: GCNNasaSettings):
             raw_alert = state["raw_alert"]
 
             result = llm_client.chat(
-                settings.LLM_MODEL_CLASSIFIER,
+                LLMModels.CLASSIFIER,
                 [
                     {
                         "role": "system",
@@ -32,7 +38,8 @@ def make_classify_node(llm_client: LLMClient, settings: GCNNasaSettings):
             return _parse_classification(result)
         
         except Exception as ex:
-            logger.error("Falha ao executar classify_node: ", ex)
+            logger.error("Falha ao executar classify_node: ", ex.message)
+            raise RuntimeError("Falha ao executar classify_node: %s" % (ex.message))
 
     return classify_node
  

@@ -17,9 +17,10 @@ logger = logging.getLogger(__name__)
 
 def main() -> None:
     settings = GCNNasaSettings()
-    llm_client = LLMClient(settings)
+    
+    llm_client = LLMClient()
 
-    pipeline = create_pipeline(llm_client=llm_client, settings=settings)
+    pipeline = create_pipeline(llm_client=llm_client)
 
     consumer = Consumer(
         client_id=settings.GCN_NASA_CLIENT_ID,
@@ -97,7 +98,8 @@ def main() -> None:
             "topic": dict_test,
         }
     )
-    logger.info("\n[FINAL] Sumário gerado: %s", result.get("summary", "N/A"))
+    
+    print(result)
 
 
 if __name__ == "__main__":
