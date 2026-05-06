@@ -1,10 +1,12 @@
 import json
 import logging
-from app.llm.client import LLMClient
+from app.llm.llm_client import LLMClient
 from app.config.llm_models import LLMModels
 from app.pipeline.state import AlertState
+from app.pipeline.utils import extract_json
 
 logger = logging.getLogger(__name__)
+
 
 def make_summarize_node(llm_client: LLMClient):
     """Fábrica do nó de sumarização.
@@ -46,10 +48,12 @@ def make_summarize_node(llm_client: LLMClient):
                 ],
             )
 
+            parsed = extract_json(result)
             # Retorna APENAS as chaves que quer atualizar
-            return {"summary": result}
+            return {"summary": parsed if parsed else result}
+
         except Exception as ex:
-            logger.error("Falha ao executar summarize_node: ", ex.message)
-            raise RuntimeError("Falha ao executar summarize_node: %s" % (ex.message))
-            
+            logger.error("Falha ao executar summarize_node: %s", ex)
+            raise
+
     return summarize_node

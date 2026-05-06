@@ -5,13 +5,14 @@ from app.pipeline.nodes.classify import make_classify_node
 from app.pipeline.nodes.enrich import make_enrich_node
 from app.pipeline.nodes.summarize import make_summarize_node
 from app.pipeline.nodes.persist import persist_node
+from app.config.gcn_nasa_settings import KNOWN_TYPES
 
 logger = logging.getLogger(__name__)
 
 
 def route_after_classify(state: AlertState) -> str:
-    alert_type = state.get("alert_type", "UNKNOWN")
-    if alert_type in ("UNKNOWN", "HEARTBEAT"):
+    alert_type = state.get("alert_type", "UNKNOWN").upper()
+    if alert_type not in KNOWN_TYPES:
         logger.warning("Alerta ignorado — tipo: %s", alert_type)
         return END
     return "enrich"

@@ -4,7 +4,7 @@ import time
 
 from gcn_kafka import Consumer
 from app.config.gcn_nasa_settings import GCNNasaSettings
-from app.llm.client import LLMClient
+from app.llm.llm_client import LLMClient
 from app.models import TOPIC_MODEL_MAP
 from app.pipeline.graph import create_pipeline
 
@@ -15,9 +15,27 @@ logging.basicConfig(
 logger = logging.getLogger(__name__)
 
 
+def get_embedding():
+    # TODO Adicionr pinecone ao implementar RAG
+    # uv add langchain-pinecone
+    
+    # from langchain_community.document_loaders import TextLoader
+    # from langchain_text_splitters import CharacterTextSplitter
+    # from langchain_pinecone import PineconeVectorStore
+    
+    # loader = TextLoader("rag-pinecone-langsmith/data/data.txt")
+    # document = loader.load()
+    # settings = GCNNasaSettings()
+    # embeddings = LLMClient()
+    # pinecone_index_name = settings.INDEX_NAME
+    # text_splitter = CharacterTextSplitter(chunk_size=1000, chunk_overlap=0)
+    # texts = text_splitter.split_documents(documents=document)
+    # PineconeVectorStore.from_documents(texts, embeddings, index_name=pinecone_index_name)
+    pass
+
 def main() -> None:
     settings = GCNNasaSettings()
-    
+
     llm_client = LLMClient()
 
     pipeline = create_pipeline(llm_client=llm_client)
@@ -31,13 +49,9 @@ def main() -> None:
     duracao = settings.CONSUMER_DURATION
     logger.info("Consumidor GCN iniciado. Executando por %d segundo(s)...", duracao)
 
-    dict_test = {}
-    keep = True
-
     inicio = time.monotonic()
     try:
-        # while (time.monotonic() - inicio) < duracao:
-        while keep:
+        while (time.monotonic() - inicio) < duracao:
             for message in consumer.consume(timeout=1):
                 if message.error():
                     logger.error("Erro no Kafka: %s", message.error())
@@ -66,20 +80,20 @@ def main() -> None:
                         parsed.model_dump_json()[:200],
                     )
 
-                    # if topic != "gcn.heartbeat":
-                    # result = pipeline.invoke(
-                    #     {
-                    #         "raw_alert": value,  # dict original, completo
-                    #         "topic": topic,
-                    #     }
-                    # )
+                    if topic == "gcn.heartbeat":
+                        logger.debug("Heartbeat recebido — ignorando pipeline.")
+                        continue
 
-                    # logger.info(
-                    #     "[FINAL] Sumário gerado: %s", result.get("summary", "N/A")
-                    # )
+                    result = pipeline.invoke(
+                        {
+                            "raw_alert": value,
+                            "topic": topic,
+                        }
+                    )
 
-                    dict_test = model_class
-                    keep = False
+                    logger.info(
+                        "[FINAL] Sumário gerado: %s", result.get("summary", "N/A")
+                    )
 
                 except Exception:
                     logger.exception(
@@ -91,15 +105,6 @@ def main() -> None:
             "Consumidor encerrado após %.1f segundo(s).",
             time.monotonic() - inicio,
         )
-    print("\nLANGGRAPH")
-    result = pipeline.invoke(
-        {
-            "raw_alert": value,  # dict original, completo
-            "topic": dict_test,
-        }
-    )
-    
-    print(result)
 
 
 if __name__ == "__main__":

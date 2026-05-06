@@ -2,7 +2,7 @@
 
 import logging
 from openai import OpenAI
-from app.llm.settings import LLMSettings
+from app.llm.llm_settings import LLMSettings
 from app.config.llm_models import LLMModels
 
 logger = logging.getLogger(__name__)
@@ -59,7 +59,13 @@ class LLMClient:
 
     # ── Embeddings ───────────────────────────────────────────────────────────
 
-    def embed(self, text: str) -> list[float]:
+    def embedded(self, text: str) -> list[float]:
+        return self._private_embed(text=text, llm_model=LLMModels.EMBEDDER)
+    
+    def ollama_embedded(self, text: str) -> list[float]:
+        return self._private_embed(text=text, llm_model=LLMModels.OLLAMA_EMBEDDER)
+
+    def _private_embedded(self, text: str, llm_model: str) -> list[float]:
         """Gera um embedding vetorial para o *texto* fornecido.
 
         Args:
@@ -69,10 +75,10 @@ class LLMClient:
             Lista de floats representando o vetor de embedding.
         """
         logger.debug(
-            "embed() model=%s tamanho_texto=%d", LLMModels.EMBEDDER, len(text)
+            "embed() model=%s tamanho_texto=%d", llm_model, len(text)
         )
         response = self._client.embeddings.create(
-            model=LLMModels.EMBEDDER,
+            model=llm_model,
             input=text,
         )
         return response.data[0].embedding

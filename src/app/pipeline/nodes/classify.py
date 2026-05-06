@@ -1,9 +1,9 @@
-import re
 import json
 import logging
-from app.llm.client import LLMClient
+from app.llm.llm_client import LLMClient
 from app.config.llm_models import LLMModels
 from app.pipeline.state import AlertState
+from app.pipeline.utils import extract_json
 
 logger = logging.getLogger(__name__)
 
@@ -16,7 +16,6 @@ def make_classify_node(llm_client: LLMClient):
     """
 
     def classify_node(state: AlertState) -> dict:
-
         try:
             raw_alert = state["raw_alert"]
 
@@ -35,23 +34,14 @@ def make_classify_node(llm_client: LLMClient):
                 ],
             )
 
-            return _parse_classification(result)
-        
+            parsed = extract_json(result)
+            # Fallback: retorna tipo genérico se não conseguir parsear
+            if not parsed:
+                return {"classification": result, "alert_type": "UNKNOWN"}
+            return parsed
+
         except Exception as ex:
-            logger.error("Falha ao executar classify_node: ", ex.message)
-            raise RuntimeError("Falha ao executar classify_node: %s" % (ex.message))
+            logger.error("Falha ao executar classify_node: %s", ex)
+            raise
 
     return classify_node
- 
-
-def _parse_classification(llm_response: str) -> dict:
-        """Extrai o JSON da resposta da LLM, mesmo com texto ao redor."""
-        # Tenta encontrar um bloco JSON na resposta
-        match = re.search(r"\{.*\}", llm_response, re.DOTALL)
-        if match:
-            try:
-                return json.loads(match.group())
-            except json.JSONDecodeError:
-                pass
-        # Fallback: retorna tipo genérico se não conseguir parsear
-        return {"classification": llm_response, "alert_type": "UNKNOWN"}

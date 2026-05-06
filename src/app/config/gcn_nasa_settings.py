@@ -1,6 +1,11 @@
 from pydantic import SecretStr
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
+# Tipos de eventos astronômicos reconhecidos pelo pipeline de classificação
+KNOWN_TYPES: frozenset[str] = frozenset(
+    {"GRB", "GW", "FRB", "NEUTRINO", "X-RAY", "SUPERNOVA"}
+)
+
 
 class GCNNasaSettings(BaseSettings):
     """Configurações do consumidor GCN NASA carregadas do arquivo .env.
@@ -16,6 +21,7 @@ class GCNNasaSettings(BaseSettings):
     GCN_NASA_ALERTS: list[str]
     # Tempo total (em segundos) que o consumidor ficará ativo escutando mensagens
     CONSUMER_DURATION: int = 30
+    INDEX_NAME: str
 
     model_config = SettingsConfigDict(
         # Tenta carregar do diretório atual, ou um nível acima

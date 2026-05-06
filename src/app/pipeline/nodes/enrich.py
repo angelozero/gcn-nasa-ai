@@ -1,6 +1,6 @@
 import json
 import logging
-from app.llm.client import LLMClient
+from app.llm.llm_client import LLMClient
 from app.config.llm_models import LLMModels
 from app.pipeline.state import AlertState
 

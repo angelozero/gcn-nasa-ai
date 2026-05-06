@@ -11,3 +11,4 @@ class LLMModels:
     CLASSIFIER: str = "nasa-classifier"
     EMBEDDER: str = "nasa-embedder"
     FAST: str = "nasa-fast"
+    OLLAMA_EMBEDDER: str = "ollama-embedder"
