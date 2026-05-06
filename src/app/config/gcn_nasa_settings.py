@@ -11,7 +11,7 @@ class GCNNasaSettings(BaseSettings):
     """Configurações do consumidor GCN NASA carregadas do arquivo .env.
 
     Responsabilidade única: credenciais e parâmetros do Kafka GCN.
-    Configurações do LLM ficam em LLMSettings (llm/settings.py).
+    Configurações do LLM ficam em LLMSettings (llm/llm_settings.py).
     Aliases de modelos ficam em LLMModels (config/llm_models.py).
     """
 

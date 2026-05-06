@@ -59,13 +59,15 @@ class LLMClient:
 
     # ── Embeddings ───────────────────────────────────────────────────────────
 
-    def embedded(self, text: str) -> list[float]:
-        return self._private_embed(text=text, llm_model=LLMModels.EMBEDDER)
-    
-    def ollama_embedded(self, text: str) -> list[float]:
-        return self._private_embed(text=text, llm_model=LLMModels.OLLAMA_EMBEDDER)
+    def embed(self, text: str) -> list[float]:
+        """Gera embedding usando o modelo remoto (LiteLLM proxy)."""
+        return self._embed(text=text, llm_model=LLMModels.EMBEDDER)
 
-    def _private_embedded(self, text: str, llm_model: str) -> list[float]:
+    def ollama_embed(self, text: str) -> list[float]:
+        """Gera embedding usando o modelo local (Ollama)."""
+        return self._embed(text=text, llm_model=LLMModels.OLLAMA_EMBEDDER)
+
+    def _embed(self, text: str, llm_model: str) -> list[float]:
         """Gera um embedding vetorial para o *texto* fornecido.
 
         Args:

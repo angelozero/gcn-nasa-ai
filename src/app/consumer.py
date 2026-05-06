@@ -15,8 +15,8 @@ logging.basicConfig(
 logger = logging.getLogger(__name__)
 
 
-def get_embedding():
-    # TODO Adicionr pinecone ao implementar RAG
+def init_vector_store():
+    # TODO Adicionar pinecone ao implementar RAG
     # uv add langchain-pinecone
     
     # from langchain_community.document_loaders import TextLoader
@@ -30,7 +30,7 @@ def get_embedding():
     # pinecone_index_name = settings.INDEX_NAME
     # text_splitter = CharacterTextSplitter(chunk_size=1000, chunk_overlap=0)
     # texts = text_splitter.split_documents(documents=document)
-    # PineconeVectorStore.from_documents(texts, embeddings, index_name=pinecone_index_name)
+    # PineconeVectorStore.from_documents(texts, embeddings.embed(), index_name=pinecone_index_name)
     pass
 
 def main() -> None:
@@ -46,12 +46,12 @@ def main() -> None:
     )
     consumer.subscribe(settings.GCN_NASA_ALERTS)
 
-    duracao = settings.CONSUMER_DURATION
-    logger.info("Consumidor GCN iniciado. Executando por %d segundo(s)...", duracao)
+    duration = settings.CONSUMER_DURATION
+    logger.info("Consumidor GCN iniciado. Executando por %d segundo(s)...", duration)
 
-    inicio = time.monotonic()
+    start = time.monotonic()
     try:
-        while (time.monotonic() - inicio) < duracao:
+        while (time.monotonic() - start) < duration:
             for message in consumer.consume(timeout=1):
                 if message.error():
                     logger.error("Erro no Kafka: %s", message.error())
@@ -103,7 +103,7 @@ def main() -> None:
         consumer.close()
         logger.info(
             "Consumidor encerrado após %.1f segundo(s).",
-            time.monotonic() - inicio,
+            time.monotonic() - start,
         )
 
 

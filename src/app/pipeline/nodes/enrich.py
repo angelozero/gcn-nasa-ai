@@ -47,7 +47,7 @@ def make_enrich_node(llm_client: LLMClient):
             return {"analysis": result}
         
         except Exception as ex:
-            logger.error("Falha ao executar enrich_node: ", ex.message)
-            raise RuntimeError("Falha ao executar enrich_node: %s" % (ex.message))
+            logger.error("Falha ao executar enrich_node: %s", ex)
+            raise
 
     return enrich_node
