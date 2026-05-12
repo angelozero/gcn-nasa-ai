@@ -15,24 +15,6 @@ logging.basicConfig(
 logger = logging.getLogger(__name__)
 
 
-def init_vector_store():
-    # TODO Adicionar pinecone ao implementar RAG
-    # uv add langchain-pinecone
-    
-    # from langchain_community.document_loaders import TextLoader
-    # from langchain_text_splitters import CharacterTextSplitter
-    # from langchain_pinecone import PineconeVectorStore
-    
-    # loader = TextLoader("rag-pinecone-langsmith/data/data.txt")
-    # document = loader.load()
-    # settings = GCNNasaSettings()
-    # embeddings = LLMClient()
-    # pinecone_index_name = settings.INDEX_NAME
-    # text_splitter = CharacterTextSplitter(chunk_size=1000, chunk_overlap=0)
-    # texts = text_splitter.split_documents(documents=document)
-    # PineconeVectorStore.from_documents(texts, embeddings.embed(), index_name=pinecone_index_name)
-    pass
-
 def main() -> None:
     settings = GCNNasaSettings()
 
@@ -109,3 +91,4 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
+    
