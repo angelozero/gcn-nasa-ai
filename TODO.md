@@ -19,3 +19,7 @@
         - text_splitter = CharacterTextSplitter(chunk_size=1000, chunk_overlap=0)
         - texts = text_splitter.split_documents(documents=document)
         - PineconeVectorStore.from_documents(texts, embeddings.embed(), index_name=pinecone_index_name) 
+
+- Criar SDK 
+- MCP
+- Agente / Template
