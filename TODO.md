@@ -23,3 +23,4 @@
 - Criar SDK 
 - MCP
 - Agente / Template
+- Skills
