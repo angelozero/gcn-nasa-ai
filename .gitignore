@@ -404,3 +404,5 @@ fabric.properties
 # .idea
 
 uv.lock
+
+.DS_Store

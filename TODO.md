@@ -20,7 +20,45 @@
         - texts = text_splitter.split_documents(documents=document)
         - PineconeVectorStore.from_documents(texts, embeddings.embed(), index_name=pinecone_index_name) 
 
-- Criar SDK 
-- MCP
-- Agente / Template
-- Skills
+
+PYTHON
+MODELS
+PROMPT
+PROMPT ENGINEERING
+CONTEXT ENGINEERING
+TEMPLATES
+EMBEDDING
+POSTGRES (com pgvector)
+DATABRICKS
+RAG
+PINECONE
+SDK
+SKILLS
+TOOLS
+HyDE (Hypothetical Document Embeddings)
+GRAPHRAG (Neo4j)
+AI GATEWAY (LiteLLM / Fallback / Rate Limiting)
+MCP (Model Context Protocol)
+LANGCHAIN
+LANGGRAPH
+AGENTES
+HOOKS
+HALF-LOOP
+LONG-TERM MEMORY (Episodic & Semantic)
+EVENT STREAMING (SSE / UI Tracing)
+ARQUITETURA
+PII SERVICE
+ANONIMIZAÇÃO
+PROMPT INJECTION SHIELD
+GUARDRAILS
+OTEL (OpenTelemetry)
+EXPERIMENTS
+MLFLOW
+JUDGES (LLM-as-a-Judge)
+EVAL SERVICE
+E2E (End-to-End Testing)
+HARNESS (https://www.youtube.com/watch?v=uezD0dRdz9Q)
+RATE LIMIT
+DEEP AGENT
+MELHORES PRATICAS
+CLEAN ARCH
